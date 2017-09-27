@@ -78,10 +78,10 @@ public class MainActivityFragment extends Fragment implements MyAlertDialog.Aler
         shakeAnimation.setRepeatCount(3);
 
         guessLinearLayouts = new ArrayList<>();
-        guessLinearLayouts.add((LinearLayout) view.findViewById(R.id.row1LinearLayout));
-        guessLinearLayouts.add((LinearLayout) view.findViewById(R.id.row2LinearLayout));
-        guessLinearLayouts.add((LinearLayout) view.findViewById(R.id.row3LinearLayout));
-        guessLinearLayouts.add((LinearLayout) view.findViewById(R.id.row4LinearLayout));
+        guessLinearLayouts.add(view.findViewById(R.id.row1LinearLayout));
+        guessLinearLayouts.add(view.findViewById(R.id.row2LinearLayout));
+        guessLinearLayouts.add(view.findViewById(R.id.row3LinearLayout));
+        guessLinearLayouts.add(view.findViewById(R.id.row4LinearLayout));
 
         for (LinearLayout row : guessLinearLayouts) {
             for (int column = 0; column < row.getChildCount(); column++) {
@@ -250,12 +250,7 @@ public class MainActivityFragment extends Fragment implements MyAlertDialog.Aler
                     quizResults.show(getFragmentManager(), "quiz results");
                 } else {
                     handler.postDelayed(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    animate(true);
-                                }
-                            }, 2000);
+                            () -> animate(true), 2000);
                 }
             } else {
                 flagImageView.startAnimation(shakeAnimation);

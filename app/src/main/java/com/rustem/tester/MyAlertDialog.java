@@ -1,7 +1,6 @@
 package com.rustem.tester;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -11,9 +10,6 @@ public class MyAlertDialog extends DialogFragment {
 
     public void setmListener(AlertDialogListener mListener) {
         this.mListener = mListener;
-    }
-
-    public MyAlertDialog() {
     }
 
     interface AlertDialogListener {
@@ -43,11 +39,7 @@ public class MyAlertDialog extends DialogFragment {
                         (1000 / (double) mTotalGuesses)));
 
         builder.setPositiveButton(R.string.reset_quiz,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        mListener.onPositiveClick();
-                    }
-                }
+                (dialog, id) -> mListener.onPositiveClick()
         );
 
         return builder.create();

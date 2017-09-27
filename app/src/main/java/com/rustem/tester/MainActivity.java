@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -86,45 +86,41 @@ public class MainActivity extends AppCompatActivity {
 
     // Слушатель изменений в конфигурации SharedPreferences
     private OnSharedPreferenceChangeListener preferencesChangeListener =
-            new OnSharedPreferenceChangeListener() {
-                // Вызывается при изменении настроек
-                @Override
-                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                    preferencesChanged = true; // Пользователь изменил настройки
+            (sharedPreferences, key) -> {
+                preferencesChanged = true; // Пользователь изменил настройки
 
-                    MainActivityFragment quizFragment =
-                            (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.quizFragment);
+                MainActivityFragment quizFragment =
+                        (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.quizFragment);
 
-                    if (key.equals(CHOICES)) { // Изменилось число вариантов
-                        quizFragment.updateGuessRows(sharedPreferences);
+                if (key.equals(CHOICES)) { // Изменилось число вариантов
+                    quizFragment.updateGuessRows(sharedPreferences);
+                    quizFragment.resetQuiz();
+                } else if (key.equals(REGIONS)) { // Изменились регионы
+                    Set<String> regions =
+                            sharedPreferences.getStringSet(REGIONS, null);
+
+                    if (regions != null && regions.size() > 0) {
+                        quizFragment.updateRegions(sharedPreferences);
                         quizFragment.resetQuiz();
-                    } else if (key.equals(REGIONS)) { // Изменились регионы
-                        Set<String> regions =
-                                sharedPreferences.getStringSet(REGIONS, null);
+                    } else {
+                        // Хотя бы один один регион - по умолчанию Северная Америка
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        regions.add(getString(R.string.default_region));
+                        editor.putStringSet(REGIONS, regions);
+                        editor.apply();
 
-                        if (regions != null && regions.size() > 0) {
-                            quizFragment.updateRegions(sharedPreferences);
-                            quizFragment.resetQuiz();
-                        } else {
-                            // Хотя бы один один регион - по умолчанию Северная Америка
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            regions.add(getString(R.string.default_region));
-                            editor.putStringSet(REGIONS, regions);
-                            editor.apply();
-
-                            Toast.makeText(
-                                    MainActivity.this,
-                                    R.string.default_region_message,
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                        }
+                        Toast.makeText(
+                                MainActivity.this,
+                                R.string.default_region_message,
+                                Toast.LENGTH_SHORT
+                        ).show();
                     }
-
-                    Toast.makeText(
-                            MainActivity.this,
-                            R.string.restarting_quiz,
-                            Toast.LENGTH_SHORT
-                    ).show();
                 }
+
+                Toast.makeText(
+                        MainActivity.this,
+                        R.string.restarting_quiz,
+                        Toast.LENGTH_SHORT
+                ).show();
             };
 }
