@@ -24,4 +24,15 @@
         <item>6</item>
         <item>8</item>
     </string-array>
+    
+    <string-array name="programming_array">
+        <item>Flags</item>
+        <item>Git</item>
+        <item>JAVA</item>
+        <item>React</item>
+        <item>Js</item>
+        <item>PHP</item>
+        <item>HTML</item>
+        <item>CSS</item>
+    </string-array>
 </resources>
